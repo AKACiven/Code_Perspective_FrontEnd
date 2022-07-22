@@ -5,7 +5,7 @@
     </div>
     <div>
       <el-divider><i class="el-icon-aim"></i></el-divider>
-      <h4 class="title2">代码透视项目</h4>
+      <h4 @click="work_gen" class="title2">代码透视项目</h4>
       <el-divider>简介</el-divider>
       <span>代码作为一种程序语言，它和人类的自然语言一样，都是后天习得的。</span>
       <el-divider></el-divider>
@@ -80,6 +80,11 @@ export default {
   },
   created() {},
   methods: {
+    work_gen() {
+      this.$router.push({
+        path: '/Work/WorkSpace'
+      })
+    }
   }
 }
 </script>

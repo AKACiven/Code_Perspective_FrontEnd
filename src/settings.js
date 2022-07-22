@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Frank Tracing for Hospital',
+  title: 'Code Perspective Project',
 
   /**
    * @type {boolean} true | false

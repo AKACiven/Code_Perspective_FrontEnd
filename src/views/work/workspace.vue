@@ -1,24 +1,26 @@
 <template>
   <div class="app-container">
-    <el-upload
-      class="upload-demo"
-      drag
-      action="https://jsonplaceholder.typicode.com/posts/"
-      multiple
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :before-remove="beforeRemove"
-      :limit="3"
-      :on-exceed="handleExceed"
-      :file-list="fileList">
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-      <div class="el-upload__tip" slot="tip">只能上传文件</div>
-    </el-upload>
-    <el-divider></el-divider>
-    <el-row>
-      <el-button type="primary">主要按钮</el-button>
-    </el-row>
+    <el-col :xs="24" :sm="24" :lg="8">
+      <el-upload
+        class="upload-demo"
+        drag
+        action="https://d2b93d65-113e-4883-91bc-7c2f16a8dc66.mock.pstmn.io/posts/"
+        multiple
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :before-remove="beforeRemove"
+        :limit="20"
+        :on-exceed="handleExceed"
+        :file-list="fileList">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传文件</div>
+      </el-upload>
+      <el-divider></el-divider>
+      <el-row>
+        <el-button @click="analyse_gen" type="primary">进行分析</el-button>
+      </el-row>
+    </el-col>
   </div>
 </template>
 
@@ -27,9 +29,7 @@
 export default {
   data() {
     return {
-      fileList: [
-        { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' },
-        { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }]
+      fileList: []
     }
   },
   methods: {
@@ -40,10 +40,15 @@ export default {
       console.log(file)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(`当前限制选择 20 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${ file.name }？`)
+    },
+    analyse_gen() {
+      this.$router.push({
+        path: '/Work/ShowBoard'
+      })
     }
   }
 }

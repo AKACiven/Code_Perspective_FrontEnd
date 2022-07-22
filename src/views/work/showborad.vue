@@ -15,7 +15,7 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
           <el-table
-            :data="tableData"
+            :data="tabledata"
             stripe
             style="width: 100%">
             <el-table-column
@@ -44,7 +44,7 @@
           <el-divider></el-divider>
           <el-tree
             class="filter-tree"
-            :data="data"
+            :data="treedata"
             :props="defaultProps"
             default-expand-all
             :filter-node-method="filterNode"
@@ -58,85 +58,40 @@
 
 <script>
 import * as echarts from 'echarts'
+import { checkResult } from '@/api/table'
 
 export default {
-  watch: {
-    filterText(val) {
-      this.$refs.tree.filter(val)
-    }
-  },
   data() {
     return {
+      hasdata: 0,
       chartPie: null,
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      piedata: [],
+      tabledata: [],
       filterText: '',
-      data: [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{
-            id: 9,
-            label: '三级 1-1-1'
-          }, {
-            id: 10,
-            label: '三级 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      treedata: [],
       defaultProps: {
         children: 'children',
         label: 'label'
       }
     }
   },
-  mounted: function() {
-    this.drawCharts()
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val)
+    }
+  },
+  created() {
+    this.fetch_result()
+  },
+  mounted() {
   },
   methods: {
     drawPieChart() {
       this.chartPie = echarts.init(document.getElementById('chartPie'))
       this.chartPie.setOption({
         title: {
-          text: 'Pie Chart',
-          subtext: '纯属虚构',
+          text: 'Main Character Chart',
+          subtext: '对象性格',
           x: 'center'
         },
         tooltip: {
@@ -146,21 +101,15 @@ export default {
         legend: {
           orient: 'vertical',
           left: 'left',
-          data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+          data: ['尽责性', '外倾性', '宜人性', '情绪性', '开放性']
         },
         series: [
           {
-            name: '访问来源',
+            name: '分析结果',
             type: 'pie',
             radius: '55%',
             center: ['50%', '60%'],
-            data: [
-              { value: 335, name: '直接访问' },
-              { value: 310, name: '邮件营销' },
-              { value: 234, name: '联盟广告' },
-              { value: 135, name: '视频广告' },
-              { value: 1548, name: '搜索引擎' }
-            ],
+            data: this.piedata,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -172,17 +121,30 @@ export default {
         ]
       })
     },
-    drawCharts() {
-      this.drawPieChart()
-    },
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
+    },
+    fetch_result() {
+      checkResult().then(response => {
+        this.hasdata = response.hasdata
+        this.piedata = response.piedata
+        this.treedata = response.treedata
+        this.tabledata = response.tabledata
+        if (this.hasdata === 0) {
+          this.$alert('请先在工作页面上传文件！', '服务器没有文件', {
+            confirmButtonText: '前往工作页面',
+            callback: action => {
+              this.$router.push({
+                path: '/Work/WorkSpace'
+              })
+            }
+          })
+        }
+        this.drawPieChart()
+      })
     }
   }
-  // updated: function () {
-  //     this.drawCharts()
-  // }
 }
 </script>
 
